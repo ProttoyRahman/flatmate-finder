@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Post a Vacancy</title></head>
+<body>
+  <h1>Post Room Vacancy</h1>
+  <form method="POST" action="/vacancies/post">
+    <input name="title" placeholder="Title" required />
+    <input name="location" placeholder="Location" required />
+    <input name="rent" type="number" placeholder="Monthly Rent" required />
+    <textarea name="description" placeholder="Describe the room" required></textarea>
+    <button type="submit">Post</button>
+  </form>
+</body>
+</html>
+

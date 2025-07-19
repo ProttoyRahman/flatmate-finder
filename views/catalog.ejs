@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Vacancy Catalog</title></head>
+<body>
+  <h1>Available Rooms</h1>
+  <ul>
+    <% listings.forEach(listing => { %>
+      <li>
+        <strong><%= listing.location %></strong> — $<%= listing.rent %>/month
+        <p><%= listing.description %></p>
+      </li>
+    <% }) %>
+  </ul>
+  <% if (loggedIn) { %>
+    <a href="/vacancies/post"><button>Post a Vacancy</button></a>
+  <% } else { %>
+    <a href="/login"><button>Login to Post Vacancy</button></a>
+  <% } %>
+
+</body>
+</html>
