@@ -5,8 +5,12 @@ const User = require('../models/User');
 
 // Show registration form
 router.get('/register', (req, res) => {
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
   res.render('register');
 });
+
 
 // Handle registration form submission
 router.post('/register', async (req, res) => {
@@ -23,8 +27,12 @@ router.post('/register', async (req, res) => {
 
 // Show login form
 router.get('/login', (req, res) => {
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
   res.render('login');
 });
+
 
 
 

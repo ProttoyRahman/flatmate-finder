@@ -30,6 +30,11 @@ app.use(session({
   store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
 }));
 
+app.use((req, res, next) => {
+  res.locals.loggedIn = !!req.session.userId;
+  next();
+});
+
 // View engine
 app.set('view engine', 'ejs');
 
@@ -39,8 +44,10 @@ app.use('/vacancies', vacancyRoutes);
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('Welcome to Flatmate Finder!');
+  res.render('index');
 });
+
+
 
 // Start server
 app.listen(3000, () => {

@@ -11,8 +11,10 @@
       </li>
     <% }) %>
   </ul>
+  <a href="/" class="btn btn-outline-secondary">Back to Home</a>
   <% if (loggedIn) { %>
     <a href="/vacancies/post"><button>Post a Vacancy</button></a>
+    <a href="/logout"><button>Logout</button></a>
   <% } else { %>
     <a href="/login"><button>Login to Post Vacancy</button></a>
   <% } %>
