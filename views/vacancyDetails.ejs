@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= vacancy.title %></title>
+</head>
+<body>
+  <h1><%= vacancy.title %></h1>
+  <p><strong>Location:</strong> <%= vacancy.location %></p>
+  <p><strong>Rent:</strong> BDT <%= vacancy.rent %></p>
+  <p><strong>Description:</strong> <%= vacancy.description %></p>
+  <p><strong>Posted By:</strong> <%= vacancy.postedBy.name %></p>
+
+  <a href="/vacancies">Back to Catalog</a>
+</body>
+</html>

@@ -6,8 +6,10 @@
   <ul>
     <% listings.forEach(listing => { %>
       <li>
+        <a href="/vacancies/<%= listing._id %>"><%= listing.title %></a>
         <strong><%= listing.location %></strong> — BDT <%= listing.rent %>/month
         <p><%= listing.description %></p>
+        <p>Posted by: <%= listing.postedBy ? listing.postedBy.name : 'Unknown' %></p>
       </li>
     <% }) %>
   </ul>
