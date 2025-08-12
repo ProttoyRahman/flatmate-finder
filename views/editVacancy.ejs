@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Vacancy</title>
+</head>
+<body>
+  <a href="/vacancies/<%= vacancy._id %>">← Back to Listing</a>
+  <h1>Edit Vacancy</h1>
+  <form method="POST" action="/vacancies/<%= vacancy._id %>/edit">
+    <input name="title" value="<%= vacancy.title %>" placeholder="Title" required />
+    <textarea name="description" placeholder="Description" required><%= vacancy.description %></textarea>
+    <input name="location" value="<%= vacancy.location %>" placeholder="Location" required />
+    <input name="rent" type="number" value="<%= vacancy.rent %>" placeholder="Rent" required />
+    <input name="roomSize" value="<%= vacancy.roomSize %>" placeholder="Room Size" />
+    <textarea name="requirements" placeholder="Requirements"><%= vacancy.requirements %></textarea>
+    <button type="submit">Save Changes</button>
+  </form>
+</body>
+</html>

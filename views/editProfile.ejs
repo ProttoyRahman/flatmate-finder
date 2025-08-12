@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Profile</title>
+</head>
+<body>
+  <a href="/profile">← Back to Profile</a>
+  <h1>Edit Profile</h1>
+  <form method="POST" action="/profile/edit">
+    <input name="name" value="<%= user.name %>" placeholder="Name" required />
+    <input name="age" type="number" value="<%= user.age %>" placeholder="Age" />
+    <select name="gender">
+      <option value="">Select Gender</option>
+      <option value="Male" <%= user.gender === 'Male' ? 'selected' : '' %>>Male</option>
+      <option value="Female" <%= user.gender === 'Female' ? 'selected' : '' %>>Female</option>
+      <option value="Other" <%= user.gender === 'Other' ? 'selected' : '' %>>Other</option>
+    </select>
+    <input name="phone" value="<%= user.phone %>" placeholder="Phone" />
+
+    <h3>Lifestyle Preferences</h3>
+    <label>Smoking:</label>
+    <select name="smoking">
+      <option>No preference</option>
+      <option <%= user.preferences.smoking === 'Yes' ? 'selected' : '' %>>Yes</option>
+      <option <%= user.preferences.smoking === 'No' ? 'selected' : '' %>>No</option>
+    </select>
+
+    <label>Pets:</label>
+    <select name="pets">
+      <option>No preference</option>
+      <option <%= user.preferences.pets === 'Yes' ? 'selected' : '' %>>Yes</option>
+      <option <%= user.preferences.pets === 'No' ? 'selected' : '' %>>No</option>
+    </select>
+
+    <label>Cleanliness:</label>
+    <select name="cleanliness">
+      <option>No preference</option>
+      <option <%= user.preferences.cleanliness === 'High' ? 'selected' : '' %>>High</option>
+      <option <%= user.preferences.cleanliness === 'Moderate' ? 'selected' : '' %>>Moderate</option>
+      <option <%= user.preferences.cleanliness === 'Low' ? 'selected' : '' %>>Low</option>
+    </select>
+
+    <button type="submit">Save Changes</button>
+  </form>
+</body>
+</html>

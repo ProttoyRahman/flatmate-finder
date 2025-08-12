@@ -5,6 +5,8 @@ const vacancySchema = new mongoose.Schema({
     postedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     location: String,
     rent: Number,
+    roomSize: String,
+    requirements: String,
     description: String,
     createdAt: { type: Date, default: Date.now }
 });

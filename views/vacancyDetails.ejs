@@ -4,11 +4,26 @@
   <title><%= vacancy.title %></title>
 </head>
 <body>
+  <% if (vacancy.postedBy && vacancy.postedBy._id.toString() === userId) { %>
+    <p><a href="/vacancies/<%= vacancy._id %>/edit">Edit this vacancy</a></p>
+  <% } %>
+
   <h1><%= vacancy.title %></h1>
+  
   <p><strong>Location:</strong> <%= vacancy.location %></p>
   <p><strong>Rent:</strong> BDT <%= vacancy.rent %></p>
+  
+  <% if (vacancy.roomSize) { %>
+    <p><strong>Room Size:</strong> <%= vacancy.roomSize %></p>
+  <% } %>
+  
+  <% if (vacancy.requirements) { %>
+    <p><strong>Requirements:</strong> <%= vacancy.requirements %></p>
+  <% } %>
+  
   <p><strong>Description:</strong> <%= vacancy.description %></p>
-  <p><strong>Posted By:</strong> <%= vacancy.postedBy.name %></p>
+  
+  <p><strong>Posted By:</strong> <a href="/user/<%= vacancy.postedBy._id %>"><%= vacancy.postedBy.name %></a></p>
 
   <a href="/vacancies">Back to Catalog</a>
 </body>

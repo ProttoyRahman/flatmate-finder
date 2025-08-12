@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html>
-<head><title>Profile</title></head>
+<head>
+  <title>My Profile</title>
+</head>
 <body>
-  <a href="/" class="btn btn-outline-secondary">Back to Home</a>
-  <h1>Your Profile</h1>
-  <p>Name: <%= user.name %></p>
-  <p>Email: <%= user.email %></p>
-  <a href="/logout">Logout</a>
+  <a href="/">← Back to Home</a>
+  <h1>My Profile</h1>
 
+  <p><strong>Name:</strong> <%= user.name %></p>
+  <p><strong>Email:</strong> <%= user.email %></p>
+  <p><strong>Age:</strong> <%= user.age || 'Not set' %></p>
+  <p><strong>Gender:</strong> <%= user.gender || 'Not set' %></p>
+  <p><strong>Phone:</strong> <%= user.phone || 'Not set' %></p>
+
+  <h3>Lifestyle Preferences</h3>
+  <p><strong>Smoking:</strong> <%= user.preferences?.smoking || 'No preference' %></p>
+  <p><strong>Pets:</strong> <%= user.preferences?.pets || 'No preference' %></p>
+  <p><strong>Cleanliness:</strong> <%= user.preferences?.cleanliness || 'No preference' %></p>
+
+  <p><a href="/profile/edit">Edit Profile</a></p>
+  <p><a href="/logout">Logout</a></p>
 </body>
 </html>

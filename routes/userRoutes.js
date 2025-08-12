@@ -74,6 +74,32 @@ router.get('/profile', async (req, res) => {
   res.render('profile', { user });
 });
 
+const { requireLogin } = require('../middleware/authMiddleware');
+
+// Show edit profile form
+router.get('/profile/edit', requireLogin, async (req, res) => {
+  const user = await User.findById(req.session.userId);
+  res.render('editProfile', { user });
+});
+
+// Handle edit profile submission
+router.post('/profile/edit', requireLogin, async (req, res) => {
+  const { name, age, gender, phone, smoking, pets, cleanliness } = req.body;
+
+  try {
+    await User.findByIdAndUpdate(req.session.userId, {
+      name,
+      age,
+      gender,
+      phone,
+      preferences: { smoking, pets, cleanliness }
+    });
+    res.redirect('/profile');
+  } catch (error) {
+    res.status(500).send('Error updating profile: ' + error.message);
+  }
+});
+
 // Logout
 router.get('/logout', (req, res) => {
   req.session.destroy(err => {
