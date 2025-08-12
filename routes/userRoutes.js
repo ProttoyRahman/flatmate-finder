@@ -14,16 +14,31 @@ router.get('/register', (req, res) => {
 
 // Handle registration form submission
 router.post('/register', async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, age, gender, phone } = req.body;
+
+  // 1️⃣ Check if all required fields are filled
+  if (!name || !email || !password) {
+    return res.send('Please fill in all required fields.');
+  }
+
   try {
+    // 2️⃣ Check if email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.send('This email is already registered. Please login instead.');
+    }
+
+    // 3️⃣ Hash password and save user
     const hashed = await bcrypt.hash(password, 10);
-    const user = new User({ name, email, password: hashed });
+    const user = new User({ name, email, password: hashed, age, gender, phone });
     await user.save();
+
     res.redirect('/login');
   } catch (error) {
     res.send('Error registering user: ' + error.message);
   }
 });
+
 
 // Show login form
 router.get('/login', (req, res) => {
@@ -72,3 +87,16 @@ router.get('/logout', (req, res) => {
 });
 
 module.exports = router;
+
+// Public profile (view by ID)
+router.get('/user/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password'); // hide password
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    res.render('publicProfile', { user });
+  } catch (error) {
+    res.status(500).send('Error loading user profile');
+  }
+});

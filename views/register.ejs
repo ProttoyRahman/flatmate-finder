@@ -1,7 +1,16 @@
 <a href="/" class="btn btn-link">← Back to Home</a>
+<h1>Register</h1>
 <form method="POST" action="/register">
-    <input name="name" placeholder="Name" />
-    <input name="email" placeholder="Email" />
-    <input name="password" type="password" placeholder="Password" />
+    <input name="name" placeholder="Name" required />
+    <input name="email" type="email" placeholder="Email" required />
+    <input name="password" type="password" placeholder="Password" required />
+    <input name="age" type="number" placeholder="Age" min="0" />
+    <select name="gender">
+        <option value="">Select Gender</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+    </select>
+    <input name="phone" type="tel" placeholder="Phone Number" />
     <button type="submit">Register</button>
 </form>

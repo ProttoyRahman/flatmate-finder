@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= user.name %> - Profile</title>
+</head>
+<body>
+  <a href="/vacancies">← Back to Catalog</a>
+  <h1><%= user.name %></h1>
+  <p><strong>Email:</strong> <%= user.email %></p>
+  <% if (user.age) { %>
+    <p><strong>Age:</strong> <%= user.age %></p>
+  <% } %>
+  <% if (user.gender) { %>
+    <p><strong>Gender:</strong> <%= user.gender %></p>
+  <% } %>
+  <% if (user.phone) { %>
+    <p><strong>Phone:</strong> <%= user.phone %></p>
+  <% } %>
+</body>
+</html>
