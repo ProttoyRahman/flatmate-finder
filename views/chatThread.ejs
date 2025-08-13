@@ -1,22 +1,58 @@
 <!DOCTYPE html>
 <html>
-<head><title>Chat</title></head>
+<head>
+  <title>Chat</title>
+</head>
 <body>
   <h1>Chat</h1>
   <a href="/chats">Back to Chats</a>
-  <ul>
+  
+  <ul id="messages">
     <% chat.messages.forEach(msg => { %>
       <li>
         <strong><%= msg.sender._id.toString() === userId.toString() ? 'You' : msg.sender.name %>:</strong>
         <%= msg.content %>
-        <small>(<%= msg.sentAt.toLocaleString() %>)</small>
+        <small>(<%= new Date(msg.sentAt).toLocaleString() %>)</small>
       </li>
     <% }) %>
   </ul>
 
-  <form method="POST" action="/chats/<%= chat._id %>/message">
-    <input type="text" name="content" placeholder="Type your message" required />
+  <form id="chatForm">
+    <input id="msgInput" type="text" placeholder="Type your message" autocomplete="off" required />
     <button type="submit">Send</button>
   </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const chatId = "<%= chat._id %>";
+    const userId = "<%= userId %>";
+    const messagesUl = document.getElementById('messages');
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('msgInput');
+
+    // Join the chat room
+    socket.emit('joinChat', chatId);
+
+    // Handle new messages
+    socket.on('newChatMessage', (msg) => {
+      if (msg.chatId === chatId) {
+        const li = document.createElement('li');
+        li.innerHTML = `<strong>${msg.sender._id === userId ? 'You' : msg.sender.name}:</strong> ${msg.content} <small>(${new Date(msg.sentAt).toLocaleString()})</small>`;
+        messagesUl.appendChild(li);
+        messagesUl.scrollTop = messagesUl.scrollHeight;
+      }
+    });
+
+    // Send message
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const content = input.value.trim();
+      if (!content) return;
+
+      socket.emit('chatMessage', { chatId, senderId: userId, content });
+      input.value = '';
+    });
+  </script>
 </body>
 </html>

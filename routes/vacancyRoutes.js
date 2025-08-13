@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
       .populate('postedBy', 'name') 
       .exec();
 
-    const loggedIn = !!req.session.userId; // true if logged in
+    const loggedIn = !!req.session.userId;
 
     res.render('catalog', { listings: vacancies, loggedIn });
   } catch (err) {

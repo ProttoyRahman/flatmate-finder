@@ -16,11 +16,11 @@
   <% if (user.phone) { %>
     <p><strong>Phone:</strong> <%= user.phone %></p>
   <% } %>
+
   <% if (loggedIn && user._id.toString() !== userId) { %>
     <form action="/chats/start/<%= user._id %>" method="POST" style="display:inline;">
       <button type="submit">Message User</button>
     </form>
   <% } %>
-
 </body>
 </html>

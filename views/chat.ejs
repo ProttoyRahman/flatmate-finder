@@ -1,40 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Chat</title>
-</head>
-<body>
-  <div id="messages">
-    <% messages.forEach(msg => { %>
-      <p><strong><%= msg.sender.name %>:</strong> <%= msg.text %></p>
-    <% }) %>
-  </div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io();
+  const chatId = "<%= chat._id %>";
+  const userId = "<%= userId %>";
 
-  <form id="chatForm">
-    <input id="msgInput" type="text" placeholder="Type a message..." autocomplete="off" />
-    <button>Send</button>
-  </form>
+  // Join the chat room
+  socket.emit('joinChat', chatId);
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
-    const form = document.getElementById('chatForm');
-    const input = document.getElementById('msgInput');
-    const messagesDiv = document.getElementById('messages');
+  const form = document.getElementById('chatForm');
+  const input = document.getElementById('msgInput');
+  const messagesDiv = document.getElementById('messages');
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (input.value.trim() !== '') {
-        socket.emit('chatMessage', input.value);
-        input.value = '';
-      }
-    });
+  // Send a new message
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (input.value.trim() !== '') {
+      socket.emit('chatMessage', { chatId, senderId: userId, content: input.value });
+      input.value = '';
+    }
+  });
 
-    socket.on('chatMessage', (msg) => {
+  // Listen for new messages from the server
+  socket.on('newChatMessage', (msg) => {
+    if (msg.chatId === chatId) {
       const p = document.createElement('p');
-      p.textContent = msg;
+      p.innerHTML = `<strong>${msg.sender._id === userId ? 'You' : msg.sender.name}:</strong> ${msg.content}`;
       messagesDiv.appendChild(p);
-    });
-  </script>
-</body>
-</html>
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+  });
+</script>

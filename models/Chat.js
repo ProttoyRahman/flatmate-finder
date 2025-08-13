@@ -6,6 +6,7 @@ const chatSchema = new mongoose.Schema({
     {
       sender: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
       content: String,
+      isRead: { type: Boolean, default: false },
       sentAt: { type: Date, default: Date.now }
     }
   ]

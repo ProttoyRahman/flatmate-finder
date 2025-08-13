@@ -3,7 +3,7 @@ const router = express.Router();
 const Chat = require('../models/Chat');
 const { requireLogin } = require('../middleware/authMiddleware');
 
-// Show list of chats for logged-in user
+// List all chats for logged-in user
 router.get('/', requireLogin, async (req, res) => {
   const userId = req.session.userId;
   const chats = await Chat.find({ participants: userId })
@@ -12,7 +12,7 @@ router.get('/', requireLogin, async (req, res) => {
   res.render('chatList', { chats, userId });
 });
 
-// Show messages in a chat thread
+// View a chat thread
 router.get('/:chatId', requireLogin, async (req, res) => {
   const userId = req.session.userId;
   const chat = await Chat.findById(req.params.chatId)
@@ -22,6 +22,16 @@ router.get('/:chatId', requireLogin, async (req, res) => {
   if (!chat || !chat.participants.some(p => p._id.equals(userId))) {
     return res.status(403).send('Access denied');
   }
+
+  // Mark messages from others as read
+  let updated = false;
+  chat.messages.forEach(msg => {
+    if (!msg.isRead && msg.sender._id.toString() !== userId.toString()) {
+      msg.isRead = true;
+      updated = true;
+    }
+  });
+  if (updated) await chat.save();
 
   res.render('chatThread', { chat, userId });
 });
@@ -47,11 +57,8 @@ router.post('/start/:userId', requireLogin, async (req, res) => {
   const currentUserId = req.session.userId;
   const otherUserId = req.params.userId;
 
-  if (currentUserId === otherUserId) {
-    return res.redirect('back'); // prevent chatting with self
-  }
+  if (currentUserId === otherUserId) return res.redirect('back');
 
-  // Check if a chat between these two users already exists
   let chat = await Chat.findOne({
     participants: { $all: [currentUserId, otherUserId] }
   });

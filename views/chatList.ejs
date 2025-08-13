@@ -8,12 +8,10 @@
       <li>
         <a href="/chats/<%= chat._id %>">
           Chat with 
-          <%=
-            chat.participants
-              .filter(p => p._id.toString() !== userId.toString())
-              .map(p => p.name)
-              .join(', ')
-          %>
+          <%= chat.participants
+                .filter(p => p._id.toString() !== userId.toString())
+                .map(p => p.name)
+                .join(', ') %>
         </a>
       </li>
     <% }) %>
