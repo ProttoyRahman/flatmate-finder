@@ -25,6 +25,8 @@
   
   <p><strong>Posted By:</strong> <a href="/user/<%= vacancy.postedBy._id %>"><%= vacancy.postedBy.name %></a></p>
 
+  <% if (loggedIn && vacancy.postedBy && vacancy.postedBy._id.toString() !== userId) { %><form action="/chats/start/<%= vacancy.postedBy._id %>" method="POST" style="display:inline;"><button type="submit">Message Poster</button></form><% } %>
+
   <a href="/vacancies">Back to Catalog</a>
 </body>
 </html>

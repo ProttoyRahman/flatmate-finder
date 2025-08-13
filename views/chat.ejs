@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat</title>
+</head>
+<body>
+  <div id="messages">
+    <% messages.forEach(msg => { %>
+      <p><strong><%= msg.sender.name %>:</strong> <%= msg.text %></p>
+    <% }) %>
+  </div>
+
+  <form id="chatForm">
+    <input id="msgInput" type="text" placeholder="Type a message..." autocomplete="off" />
+    <button>Send</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const form = document.getElementById('chatForm');
+    const input = document.getElementById('msgInput');
+    const messagesDiv = document.getElementById('messages');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value.trim() !== '') {
+        socket.emit('chatMessage', input.value);
+        input.value = '';
+      }
+    });
+
+    socket.on('chatMessage', (msg) => {
+      const p = document.createElement('p');
+      p.textContent = msg;
+      messagesDiv.appendChild(p);
+    });
+  </script>
+</body>
+</html>

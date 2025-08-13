@@ -20,6 +20,7 @@
     <% if (loggedIn) { %>
       <a href="/profile"><button>Profile</button></a>
       <a href="/vacancies/post"><button>Post a Vacancy</button></a>
+      <% if (loggedIn) { %>  <a href="/chats"><button>My Chats</button></a><% } %>
       <a href="/logout"><button>Logout</button></a>
     <% } else { %>
       <a href="/login"><button>Login</button></a>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>Chat</title></head>
+<body>
+  <h1>Chat</h1>
+  <a href="/chats">Back to Chats</a>
+  <ul>
+    <% chat.messages.forEach(msg => { %>
+      <li>
+        <strong><%= msg.sender._id.toString() === userId.toString() ? 'You' : msg.sender.name %>:</strong>
+        <%= msg.content %>
+        <small>(<%= msg.sentAt.toLocaleString() %>)</small>
+      </li>
+    <% }) %>
+  </ul>
+
+  <form method="POST" action="/chats/<%= chat._id %>/message">
+    <input type="text" name="content" placeholder="Type your message" required />
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>

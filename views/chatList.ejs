@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Your Chats</title></head>
+<body>
+  <h1>Your Chats</h1>
+  <ul>
+    <% chats.forEach(chat => { %>
+      <li>
+        <a href="/chats/<%= chat._id %>">
+          Chat with 
+          <%=
+            chat.participants
+              .filter(p => p._id.toString() !== userId.toString())
+              .map(p => p.name)
+              .join(', ')
+          %>
+        </a>
+      </li>
+    <% }) %>
+  </ul>
+  <a href="/">Back to Home</a>
+</body>
+</html>

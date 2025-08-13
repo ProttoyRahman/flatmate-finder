@@ -112,8 +112,6 @@ router.get('/logout', (req, res) => {
   });
 });
 
-module.exports = router;
-
 // Public profile (view by ID)
 router.get('/user/:id', async (req, res) => {
   try {
@@ -121,8 +119,14 @@ router.get('/user/:id', async (req, res) => {
     if (!user) {
       return res.status(404).send('User not found');
     }
-    res.render('publicProfile', { user });
+    res.render('publicProfile', { 
+      user, 
+      userId: req.session.userId
+    });
   } catch (error) {
     res.status(500).send('Error loading user profile');
   }
 });
+
+
+module.exports = router;
