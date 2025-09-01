@@ -1,25 +1,69 @@
 <!DOCTYPE html>
 <html>
-<head><title>Vacancy Catalog</title></head>
+<head>
+  <title>Vacancy Catalog</title>
+</head>
 <body>
   <h1>Available Rooms</h1>
+
+  <form action="/vacancies" method="get" style="margin-bottom: 20px;">
+    <input 
+      type="text" 
+      name="search" 
+      placeholder="Search by location..." 
+      value="<%= search || '' %>"
+    >
+    <input 
+      type="number" 
+      name="minRent" 
+      placeholder="Min Rent" 
+      value="<%= minRent || '' %>"
+      style="width: 100px; margin-left: 5px;"
+    >
+    <input 
+      type="number" 
+      name="maxRent" 
+      placeholder="Max Rent" 
+      value="<%= maxRent || '' %>"
+      style="width: 100px; margin-left: 5px;"
+    >
+    <select name="sort" style="margin-left: 5px;">
+      <option value="">-- Sort By --</option>
+      <option value="rentAsc" <%= sort === 'rentAsc' ? 'selected' : '' %>>Rent: Low to High</option>
+      <option value="rentDesc" <%= sort === 'rentDesc' ? 'selected' : '' %>>Rent: High to Low</option>
+      <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>Newest Listings</option>
+    </select>
+    <button type="submit" style="margin-left: 5px;">Search</button>
+  </form>
+
   <ul>
-    <% listings.forEach(listing => { %>
-      <li>
-        <a href="/vacancies/<%= listing._id %>"><%= listing.title %></a>
-        <strong><%= listing.location %></strong> — BDT <%= listing.rent %>/month
-        <p><%= listing.description %></p>
-        <p>Posted by:  <% if (listing.postedBy) { %>  <a href="/user/<%= listing.postedBy._id %>"><%= listing.postedBy.name %></a>  <% } else { %>  Unknown  <% } %> </p>
-      </li>
-    <% }) %>
+    <% if (listings.length > 0) { %>
+      <% listings.forEach(listing => { %>
+        <li style="margin-bottom: 15px;">
+          <a href="/vacancies/<%= listing._id %>"><%= listing.title %></a>
+          <strong><%= listing.location %></strong> — BDT <%= listing.rent %>/month
+          <p><%= listing.description %></p>
+          <p>Posted by:
+            <% if (listing.postedBy) { %>
+              <a href="/user/<%= listing.postedBy._id %>"><%= listing.postedBy.name %></a>
+            <% } else { %>
+              Unknown
+            <% } %>
+          </p>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <p>No vacancies found for your search.</p>
+    <% } %>
   </ul>
+
   <a href="/" class="btn btn-outline-secondary">Back to Home</a>
   <% if (loggedIn) { %>
     <a href="/vacancies/post"><button>Post a Vacancy</button></a>
+    <a href="/dashboard"><button>Dashboard</button></a>
     <a href="/logout"><button>Logout</button></a>
   <% } else { %>
     <a href="/login"><button>Login to Post Vacancy</button></a>
   <% } %>
-
 </body>
 </html>

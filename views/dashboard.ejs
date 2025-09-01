@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Dashboard</title>
+</head>
+<body>
+  <h1>Your Dashboard</h1>
+  
+  <h2>Vacancies You Posted</h2>
+  <% if (postedVacancies.length > 0) { %>
+    <ul>
+      <% postedVacancies.forEach(vac => { %>
+        <li>
+          <a href="/vacancies/<%= vac._id %>"><%= vac.title %></a> — BDT <%= vac.rent %>/month
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>You haven't posted any vacancies yet.</p>
+  <% } %>
+
+  <h2>Saved Vacancies</h2>
+  <% if (savedVacancies.length > 0) { %>
+    <ul>
+      <% savedVacancies.forEach(vac => { %>
+        <li>
+          <a href="/vacancies/<%= vac._id %>"><%= vac.title %></a> — BDT <%= vac.rent %>/month
+        </li>
+      <% }) %>
+    </ul>
+  <% } else { %>
+    <p>You haven't saved any vacancies yet.</p>
+  <% } %>
+
+  <a href="/">Back to Home</a>
+</body>
+</html>

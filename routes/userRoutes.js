@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
+const Vacancy = require('../models/Vacancy');
 
 // Show registration form
 router.get('/register', (req, res) => {
@@ -112,7 +113,7 @@ router.get('/logout', (req, res) => {
   });
 });
 
-// Public profile (view by ID)
+// Public profile
 router.get('/user/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select('-password'); // hide password
@@ -125,6 +126,28 @@ router.get('/user/:id', async (req, res) => {
     });
   } catch (error) {
     res.status(500).send('Error loading user profile');
+  }
+});
+
+// User dashboard
+router.get('/dashboard', requireLogin, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    // Posted acancies
+    const postedVacancies = await Vacancy.find({ postedBy: userId });
+
+    // Saved vacancies (I might implement ts later)
+    const savedVacancies = []; 
+
+    res.render('dashboard', {
+      postedVacancies,
+      savedVacancies,
+      loggedIn: true
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading dashboard');
   }
 });
 

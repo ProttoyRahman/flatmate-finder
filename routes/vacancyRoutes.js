@@ -3,24 +3,50 @@ const router = express.Router();
 const Vacancy = require('../models/Vacancy');
 const { requireLogin } = require('../middleware/authMiddleware');
 
-
-// Show all vacancies (open to everyone)
+// Show all vacancies or search with filters + sorting
 router.get('/', async (req, res) => {
   try {
-    const vacancies = await Vacancy.find()
-      .populate('postedBy', 'name') 
+    const { search = '', minRent, maxRent, sort } = req.query;
+    const query = {};
+
+    // Location search
+    if (search) {
+      query.location = { $regex: search, $options: 'i' };
+    }
+
+    // Rent filter
+    if (minRent || maxRent) {
+      query.rent = {};
+      if (minRent) query.rent.$gte = Number(minRent);
+      if (maxRent) query.rent.$lte = Number(maxRent);
+    }
+
+    // Sorting
+    let sortOption = {};
+    if (sort === 'rentAsc') sortOption.rent = 1;
+    else if (sort === 'rentDesc') sortOption.rent = -1;
+    else if (sort === 'newest') sortOption.createdAt = -1;
+
+    const vacancies = await Vacancy.find(query)
+      .populate('postedBy', 'name')
+      .sort(sortOption)
       .exec();
 
     const loggedIn = !!req.session.userId;
 
-    res.render('catalog', { listings: vacancies, loggedIn });
+    res.render('catalog', {
+      listings: vacancies,
+      loggedIn,
+      search,
+      minRent,
+      maxRent,
+      sort,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error retrieving vacancies");
+    res.status(500).send('Error retrieving vacancies');
   }
 });
-
-
 
 // Show form to post a new vacancy (requires login)
 router.get('/post', requireLogin, (req, res) => {
@@ -94,7 +120,6 @@ router.post('/:id/edit', requireLogin, async (req, res) => {
   }
 });
 
-
 // Show full vacancy details by ID
 router.get('/:id', async (req, res) => {
   try {
@@ -110,7 +135,5 @@ router.get('/:id', async (req, res) => {
     res.status(500).send('Error retrieving vacancy details');
   }
 });
-
-
 
 module.exports = router;
