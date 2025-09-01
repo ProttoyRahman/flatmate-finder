@@ -134,11 +134,12 @@ router.get('/dashboard', requireLogin, async (req, res) => {
   try {
     const userId = req.session.userId;
 
-    // Posted acancies
+    // Posted vacancies
     const postedVacancies = await Vacancy.find({ postedBy: userId });
 
-    // Saved vacancies (I might implement ts later)
-    const savedVacancies = []; 
+    // Saved vacancies
+    const user = await User.findById(userId).populate('savedVacancies');
+    const savedVacancies = user.savedVacancies || [];
 
     res.render('dashboard', {
       postedVacancies,
@@ -151,5 +152,48 @@ router.get('/dashboard', requireLogin, async (req, res) => {
   }
 });
 
+// Save a vacancy
+router.post('/user/vacancies/:id/save', requireLogin, async (req, res) => {
+  try {
+    const vacancyId = req.params.id;
+    await User.findByIdAndUpdate(req.session.userId, {
+      $addToSet: { savedVacancies: vacancyId }
+    });
+    res.redirect(`/vacancies/${vacancyId}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error saving vacancy');
+  }
+});
+
+// Unsave a vacancy
+router.post('/user/vacancies/:id/unsave', requireLogin, async (req, res) => {
+  try {
+    const vacancyId = req.params.id;
+    await User.findByIdAndUpdate(req.session.userId, {
+      $pull: { savedVacancies: vacancyId }
+    });
+    res.redirect(`/vacancies/${vacancyId}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error unsaving vacancy');
+  }
+});
+
+// View saved vacancies
+router.get('/profile/saved', requireLogin, async (req, res) => {
+  try {
+    const user = await User.findById(req.session.userId)
+      .populate({
+        path: 'savedVacancies',
+        populate: { path: 'postedBy', select: 'name' }
+      });
+
+    res.render('savedVacancies', { saved: user.savedVacancies, loggedIn: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error retrieving saved vacancies');
+  }
+});
 
 module.exports = router;

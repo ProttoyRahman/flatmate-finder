@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Vacancy = require('../models/Vacancy');
 const { requireLogin } = require('../middleware/authMiddleware');
+const User = require('../models/User');
 
 // Show all vacancies or search with filters + sorting
 router.get('/', async (req, res) => {
@@ -124,16 +125,25 @@ router.post('/:id/edit', requireLogin, async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const vacancy = await Vacancy.findById(req.params.id).populate('postedBy', 'name');
-    if (!vacancy) {
-      return res.status(404).send('Vacancy not found');
+    if (!vacancy) return res.status(404).send('Vacancy not found');
+
+    // Fetch saved vacancies
+    let userSavedVacancies = [];
+    if (req.session.userId) {
+      const user = await User.findById(req.session.userId);
+      userSavedVacancies = user.savedVacancies.map(v => v.toString());
     }
 
-    // Pass userId from session for template logic
-    res.render('vacancyDetails', { vacancy, userId: req.session.userId });
+    res.render('vacancyDetails', {
+      vacancy,
+      userId: req.session.userId,
+      userSavedVacancies
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Error retrieving vacancy details');
   }
 });
+
 
 module.exports = router;

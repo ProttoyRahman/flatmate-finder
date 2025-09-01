@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Saved Vacancies</title>
+</head>
+<body>
+  <h1>Your Saved Vacancies</h1>
+  <ul>
+    <% if (saved.length > 0) { %>
+      <% saved.forEach(v => { %>
+        <li>
+          <a href="/vacancies/<%= v._id %>"><%= v.title %></a>
+          <strong><%= v.location %></strong> — BDT <%= v.rent %>/month
+          <p><%= v.description %></p>
+          <p>Posted by:
+            <% if (v.postedBy) { %>
+              <a href="/user/<%= v.postedBy._id %>"><%= v.postedBy.name %></a>
+            <% } else { %>
+              Unknown
+            <% } %>
+          </p>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <p>You have not saved any vacancies yet.</p>
+    <% } %>
+  </ul>
+  <a href="/profile">Back to Profile</a>
+</body>
+</html>

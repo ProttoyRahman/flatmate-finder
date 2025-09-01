@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
         smoking: { type: String, default: 'No preference' },
         pets: { type: String, default: 'No preference' },
         cleanliness: { type: String, default: 'No preference' }
-    }
+    },
+    savedVacancies: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Vacancy' }]
 });
 
 module.exports = mongoose.model('User', userSchema);
